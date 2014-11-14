@@ -44,12 +44,22 @@ draw() {
 
     draw="$1"
 
+    if test "$(count curr)" -lt "$draw"
+    then
+        echo >&2 "No source enough!"
+        exit 1
+    fi
+
     for i in $(seq 1 $draw)
     do
         n="$(expr $RANDOM % "$(count curr)" + 1)"
         rnd="$(head -n "$n" curr | tail -n 1)"
+        sed -i '' "${n}d" curr
         echo "$rnd" | awk '{ print "WINRAR: " $2 " " $1 }'
     done
+
+    echo
+    usage
 
 }
 
@@ -100,6 +110,10 @@ case "$command" in
         if ! echo "$draw" | grep -q ^[0-9][0-9]*$
         then
             echo >&2 "draw: Incorrect number format \`$draw'!"
+            exit 1
+        elif test "$draw" -lt 1
+        then
+            echo >&2 "draw: We can't draw zero!"
             exit 1
         fi
 
