@@ -96,8 +96,6 @@ then
         exit 2
     fi
 
-    exit 0
-
 fi
 
 case "$command" in
