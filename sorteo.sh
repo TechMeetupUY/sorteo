@@ -1,5 +1,15 @@
 #!/bin/sh
 
+detect_sed() {
+    if sed --version >/dev/null 2>&1
+    then
+        SED='sed -i'
+    else
+        SED='sed -i ""'
+    fi
+
+}
+
 program="$(basename "$0")"
 
 reset_list() {
@@ -50,11 +60,13 @@ draw() {
         exit 1
     fi
 
+    detect_sed
+
     for i in $(seq 1 $draw)
     do
         n="$(expr $RANDOM % "$(count curr)" + 1)"
         rnd="$(head -n "$n" curr | tail -n 1)"
-        sed -i '' "${n}d" curr
+        $SED "${n}d" curr
         echo "$rnd" | awk '{ print "WINRAR: " $2 " " $1 }'
     done
 
